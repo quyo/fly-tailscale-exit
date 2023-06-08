@@ -1,13 +1,14 @@
-app = "tailwings"
+# fly.toml file generated for quyo-tailscale-exit on 2022-12-27T14:11:18Z
 
-kill_signal = "SIGINT"
-kill_timeout = 5
+app = "quyo-tailscale-exit"
+kill_signal = "SIGTERM"
+kill_timeout = 15
+
+[deploy]
+  strategy = "immediate"
 
 [env]
-  PORT="41641"
-# create a reusable or ephemeral auth key
-# ephemeral auth key are not working for use as exit node as they are ipv6 only
-# flyctl secrets set TAILSCALE_AUTH_KEY=tskey-...
+  PORT = "41641"
 
 [experimental]
   auto_rollback = false

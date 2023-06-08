@@ -13,7 +13,6 @@ sysctl -p /etc/sysctl.conf
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
-# --tun=userspace-networking --socks5-server=localhost:1055
 /app/tailscaled --verbose=1 --port 41641 &
 sleep 5
 if [ ! -S /var/run/tailscale/tailscaled.sock ]; then
@@ -21,13 +20,20 @@ if [ ! -S /var/run/tailscale/tailscaled.sock ]; then
     exit 1
 fi
 
+#   --advertise-routes=$(grep fly-local-6pn /etc/hosts | sed -e 's|\s.*||' | cut -d ':' -f 1-3)::/48
 until /app/tailscale up \
     --authkey=${TAILSCALE_AUTH_KEY} \
-    --hostname=fly-${FLY_REGION} \
-    --advertise-exit-node
+    --hostname=fly-exit-${FLY_REGION} \
+    --advertise-exit-node \
+    --advertise-routes=fdaa:1:3a1::/48 \
+    --ssh
 do
     sleep 0.1
 done
 
+/app/linux-amd64/dnsproxy -u fdaa::3
+
 echo 'Tailscale started. Lets go!'
 sleep infinity
+
+/app/tailscale logout
