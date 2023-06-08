@@ -26,6 +26,7 @@ ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
     --hostname=fly-exit-${FLY_REGION} \
     --advertise-exit-node \
     --advertise-routes=fdaa:1:3a1::/48 \
+    --advertise-tags=tag:auto-exit,tag:auto-route-fly,tag:site-fly \
     --ssh
     #--advertise-tags=tag:fly-exit # requires ACL tagOwners
 
