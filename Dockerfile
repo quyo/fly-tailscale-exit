@@ -15,13 +15,15 @@ FROM alpine:latest
 RUN apk update && apk add bash bind-tools ca-certificates iptables ip6tables iproute2 tar wget \
  && rm -rf /var/cache/apk/*
 
-# Copy binary to production image
-COPY --from=tailscale /app/start.sh /app/start.sh
-COPY --from=tailscale /app/tailscaled /app/tailscaled
-COPY --from=tailscale /app/tailscale /app/tailscale
+# creating directories for tailscale
 RUN mkdir -p /var/run/tailscale
 RUN mkdir -p /var/cache/tailscale
 RUN mkdir -p /var/lib/tailscale
+
+# Copy binary to production image
+COPY --from=tailscale /app/tailscaled /app/tailscaled
+COPY --from=tailscale /app/tailscale /app/tailscale
+COPY --from=tailscale /app/start.sh /app/start.sh
 
 # Install dnsproxy
 ENV DNSPROXYVERSION=v0.49.2
