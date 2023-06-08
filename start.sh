@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-echo 'Starting up...'
+echo 'Starting up Tailscale...'
 
 # error: adding [-i tailscale0 -j MARK --set-mark 0x40000] in v4/filter/ts-forward: running [/sbin/iptables -t filter -A ts-forward -i tailscale0 -j MARK --set-mark 0x40000 --wait]: exit status 2: iptables v1.8.6 (legacy): unknown option "--set-mark"
 modprobe xt_mark
@@ -30,9 +30,26 @@ ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
     --ssh
     #--advertise-tags=tag:fly-exit # requires ACL tagOwners
 
-/app/linux-amd64/dnsproxy -u fdaa::3
+echo 'Tailscale started'
 
-echo "Tailscale started. Let's go!"
+echo 'Starting Squid...'
+
+squid &
+
+echo 'Squid started'
+
+echo 'Starting Dante...'
+
+sockd &
+
+echo 'Dante started'
+
+echo 'Starting dnsmasq...'
+
+dnsmasq &
+
+echo 'dnsmasq started'
+
 sleep infinity
 
 /app/tailscale logout
