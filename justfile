@@ -3,7 +3,7 @@ default: stop start
 start:
   fly deploy
   fly scale count 3 --max-per-region 1 --region ams,lhr,ord
-  echo "Update nameserver ip for .internal domain via Tailscale dashboard"
+  fly logs
 
 stop:
   #!/usr/bin/bash
