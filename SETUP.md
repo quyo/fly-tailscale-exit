@@ -9,6 +9,3 @@ fly deploy
 vor upgrade!
 * checken, ob key noch gültig
 * scale count 0 + hosts in tailscale löschen
-
-nach upgrade!
-* ams ip in tailscale dns settings updaten
