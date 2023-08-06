@@ -1,22 +1,24 @@
-# fly.toml file generated for quyo-tailscale-exit on 2022-12-27T14:11:18Z
+# fly.toml app configuration file generated for quyo-tailscale-exit on 2023-08-06T15:52:49Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
 app = "quyo-tailscale-exit"
+primary_region = "ams"
 kill_signal = "SIGTERM"
-kill_timeout = 15
-
-[deploy]
-  strategy = "immediate"
+kill_timeout = "15s"
 
 [env]
   PORT = "41641"
 
-[experimental]
-  auto_rollback = false
-  private_network = true
-
 [[services]]
-  internal_port = 41641
   protocol = "udp"
+  internal_port = 41641
+  processes = ["app"]
 
   [[services.ports]]
-    port = "41641"
+    port = 41641
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
